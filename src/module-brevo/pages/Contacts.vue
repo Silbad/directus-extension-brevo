@@ -1,17 +1,17 @@
 <template>
-	<private-view title="Settings">
+	<private-view title="Contacts">
 		<template #headline>Brevo</template>
 		<template #title-outer:prepend>
 			<v-button class="header-icon" rounded disabled icon secondary>
-				<v-icon name="settings" />
+				<v-icon name="person" />
 			</v-button>
 		</template>
 		<template #navigation>
-			<MenuComponent />
+			<Navigation />
 		</template>
 	</private-view>
 </template>
 
 <script lang="ts" setup>
-import MenuComponent from "./Menu.vue";
+import Navigation from "./../components/Navigation.vue";
 </script>

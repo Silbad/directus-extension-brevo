@@ -1,5 +1,6 @@
 import { defineModule } from "@directus/extensions-sdk";
-import SettingsComponent from "./Settings.vue";
+import SettingsComponent from "./pages/Settings.vue";
+import ContactsComponent from "./pages/Contacts.vue";
 
 export default defineModule({
 	id: "brevo",
@@ -7,9 +8,19 @@ export default defineModule({
 	icon: "forward_to_inbox",
 	routes: [
 		{
-			path: "brevo/settings",
-			component: SettingsComponent,
-			alias: ""
+			name: "brevo-contacts-redirect",
+			path: "",
+			redirect: "/brevo/contacts"
+		},
+		{
+			name: "brevo-contacts",
+			path: "contacts",
+			component: ContactsComponent
+		},
+		{
+			name: "brevo-settings",
+			path: "settings",
+			component: SettingsComponent
 		}
 	]
 });
