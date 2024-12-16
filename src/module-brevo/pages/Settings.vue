@@ -2,7 +2,7 @@
 	<private-view title="Settings">
 		<template #headline>Brevo</template>
 		<template #title-outer:prepend>
-			<v-button class="header-icon" rounded disabled icon secondary>
+			<v-button class="header-icon" rounded icon normal>
 				<v-icon name="settings" />
 			</v-button>
 		</template>
