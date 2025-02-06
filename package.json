@@ -15,8 +15,8 @@
 	"directus:extension": {
 		"type": "bundle",
 		"path": {
-			"app": "dist/app-brevo.js",
-			"api": "dist/api-brevo.js"
+			"app": "dist/app.js",
+			"api": "dist/api.js"
 		},
 		"entries": [
 			{
@@ -30,7 +30,16 @@
 				"source": "src/endpoint-brevo/index.ts"
 			}
 		],
-		"host": "^10.10.0"
+		"host": "^10.10.0",
+		"sandbox": {
+			"enabled": true,
+			"requestedScopes": {
+				"methods": [
+					"GET",
+					"POST"
+				]
+			}
+		}
 	},
 	"scripts": {
 		"build": "directus-extension build",
@@ -40,11 +49,13 @@
 		"clean": "npx prettier . --write"
 	},
 	"devDependencies": {
-		"@directus/errors": "^1.0.1",
-		"@directus/extensions-sdk": "12.1.4",
-		"@types/node": "^22.10.2",
+		"@directus/errors": "^2.0.0",
+		"@directus/extensions-sdk": "13.0.1",
+		"@directus/sdk": "^19.0.1",
+		"@types/node": "^22.13.1",
 		"prettier": "3.4.2",
-		"typescript": "^5.7.2",
-		"vue": "^3.5.13"
+		"typescript": "^5.7.3",
+		"vue": "^3.5.13",
+		"vue-i18n": "^11.1.0"
 	}
 }
