@@ -18,20 +18,31 @@
 		</svg>
 	</div>
 	<v-list nav scope="manuals-navigation">
-		<v-list-item router to="/brevo/contacts">
-			<v-list-item-icon> <v-icon name="person" /></v-list-item-icon>
+		<v-list-item router to="/brevo/forms">
+			<v-list-item-icon> <v-icon name="dynamic_form" /></v-list-item-icon>
 			<v-list-item-content>
-				<v-text-overflow text="Contacts" />
+				<v-text-overflow text="Forms" />
 			</v-list-item-content>
 		</v-list-item>
 		<v-list-item router to="/brevo/settings">
-			<v-list-item-icon> <v-icon name="settings" /></v-list-item-icon>
+			<v-list-item-icon> <v-icon name="api" /></v-list-item-icon>
 			<v-list-item-content>
 				<v-text-overflow text="Settings" />
 			</v-list-item-content>
 		</v-list-item>
 	</v-list>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+	name: 'Navigation',
+	setup() {
+		return {};
+	}
+});
+</script>
 
 <style lang="css" scoped>
 .brevo-logo {

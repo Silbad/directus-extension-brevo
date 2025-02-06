@@ -13,13 +13,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import Navigation from "../components/Navigation.vue";
+import { useApi } from '@directus/extensions-sdk';
 
 export default defineComponent({
 	name: 'Contacts',
 	components: {
 		Navigation
+	},
+	setup() {
+		const api = useApi();
+		
+		onMounted(() => {
+			console.log('Le composant est monté et prêt !');
+		});
+		return {};
 	}
 });
 </script>

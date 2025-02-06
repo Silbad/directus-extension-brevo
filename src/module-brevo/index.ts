@@ -1,6 +1,8 @@
 import { defineModule } from "@directus/extensions-sdk";
-import SettingsComponent from "./pages/Settings.vue";
-import ContactsComponent from "./pages/Contacts.vue";
+import SettingsComponent from "./routes/Settings.vue";
+import FormsComponent from "./routes/Forms.vue";
+
+console.log("Unofficial Brevo plugin made in 🇫🇷 by https://devbit.me");
 
 export default defineModule({
 	id: "brevo",
@@ -10,12 +12,12 @@ export default defineModule({
 		{
 			name: "brevo-contacts-redirect",
 			path: "",
-			redirect: "/brevo/contacts"
+			redirect: "/brevo/settings"
 		},
 		{
-			name: "brevo-contacts",
-			path: "contacts",
-			component: ContactsComponent
+			name: "brevo-forms",
+			path: "forms",
+			component: FormsComponent
 		},
 		{
 			name: "brevo-settings",

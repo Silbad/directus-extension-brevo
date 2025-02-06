@@ -1,0 +1,11 @@
+{
+    "api key": "API Key",
+    "send": "Post",
+    "recipient": "Recipient",
+    "send a test mail": "Send a test mail",
+    "send transactional emails with Brevo's API": "Send transactional emails with Brevo's API",
+    "sender": "Sender",
+    "system requirements": "System requirements",
+    "where find my API key?": "Where find my API key?",
+    "you have not yet configured your Brevo API key.": "You have not yet configured your Brevo API key."
+}
