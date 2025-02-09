@@ -1,5 +1,5 @@
 import { defineEndpoint } from '@directus/extensions-sdk';
-import { createDirectus, rest, createCollection, createField } from '@directus/sdk';
+import { createDirectus, rest, createCollection, createField, withToken } from '@directus/sdk';
 
 import { createError } from '@directus/errors';
 
@@ -12,17 +12,18 @@ const messageConstructor = (extensions: ErrorExtensions) => `${extensions.messag
 const ForbiddenError = createError<ErrorExtensions>('FORBIDDEN', messageConstructor, 403);
 const UnauthorizedError = createError<ErrorExtensions>('UNAUTHORIZED', messageConstructor, 401);
 
-const createSettingsCollection = async (url: string) => {
+const createSettingsCollection = async (url: string, token: string) => {
 	const client = createDirectus(url).with(rest());
 
 	const brevo_settings_object = {
 		"collection": "brevo_settings",
 		"meta": {
 			"collection": "brevo_settings",
-			"icon": "settings",
+			"icon": "forward_to_inbox",
 			"note": "Brevo plugin settings",
 			"hidden": true,
 			"singleton": true,
+			"versioning": true,
 			"translations": [
 				{
 					"language": "en-US",
@@ -53,53 +54,74 @@ const createSettingsCollection = async (url: string) => {
 			"archive_value": "archived",
 			"unarchive_value": "draft",
 			"archive_app_filter": true,
-			"sort_field": "sort",
-			"item_duplication_fields": null,
-			"sort": 1
+			"item_duplication_fields": null
 		},
 		"schema": {
-			"name": "pages",
+			"name": "brevo_settings",
 			"comment": null
 		}
 	};
 
 	const result = await client.request(
-		createCollection(brevo_settings_object)
+		withToken(token, createCollection(brevo_settings_object))
 	);
 
 	return result;
 }
 
-const createApiKeyField = async (url: string) => {
+const createSettingsApiKeyField = async (url: string, token: string) => {
 	const client = createDirectus(url).with(rest());
 
+	// API Key required field
 	const apiKeyField = {
+		"collection": "brevo_settings",
+		"field": "api_key",
+		"type": "string",
+		"meta": {
+			"collection": "brevo_settings",
 			"field": "api_key",
-			"type": "string",
-			"meta": {
-				"field": "api_key",
-				"interface": "input",
-				"options": {
-					"trim": true
-				},
-				"display": "API Key",
-				"required": true,
-				"unique": true,
-				"hidden": false,
-				"readonly": false,
-				"sort": 1
+			"interface": "input",
+			"options": {
+				"trim": true
 			},
-			"schema": {
-				"name": "api_key",
-				"type": "string",
-				"max_length": 255,
-				"nullable": false,
-				"unique": true
-			}
-		};
+			"display": "API Key",
+			"readonly": false,
+			"hidden": false,
+			"sort": 1,
+			"width": "full",
+			"translations": [
+				{
+					"language": "en-US",
+					"translation": "API Key"
+				},
+				{
+					"language": "fr-FR",
+					"translation": "Clé API"
+				},
+				{
+					"language": "de-DE",
+					"translation": "API-Schlüssel"
+				},
+				{
+					"language": "es-ES",
+					"translation": "Clave API"
+				},
+				{
+					"language": "it-IT",
+					"translation": "Chiave API"
+				},
+				{
+					"language": "pt-PT",
+					"translation": "Chave da API"
+				}
+			],
+			"note": "Brevo API Key",
+			"required": true
+		}
+	};
 
 	const result = await client.request(
-		createField("brevo_settings", apiKeyField)
+		withToken(token, createField("brevo_settings", apiKeyField))
 	);
 
 	return result;
@@ -134,6 +156,9 @@ export default defineEndpoint({
 				);
 			}
 
+			// Get the current user token
+			const token = req.token;
+
 			// Get the Brevo API Key
 			const {
 				PUBLIC_URL
@@ -150,28 +175,27 @@ export default defineEndpoint({
 
 			// Create brevo_settings Directus collection if not exist
 			try {
-				await createSettingsCollection(PUBLIC_URL);
-			} catch (error) {
+				await createSettingsCollection(PUBLIC_URL, token);
+			} catch (error: any) {
 				return next(
 					new ForbiddenError({
-						message: `Failed to create brevo_settings collection: ${error}`
+						message: `Failed to create brevo_settings collection: ${error.errors[0].message}`
 					})
 				);
 			}
-
-			// Create api_key field in brevo_settings collection if not exist
+			// Create brevo_settings fields if not exist
 			try {
-				await createApiKeyField(PUBLIC_URL);
-			} catch (error) {
+				await createSettingsApiKeyField(PUBLIC_URL, token);
+			} catch (error: any) {
 				return next(
 					new ForbiddenError({
-						message: `Failed to create api_key field: ${error}`
+						message: `Failed to create api_key field: ${error.errors[0].message}`
 					})
 				);
 			}
 
 			res.json({
-				message: 'PUBLIC_URL is set.'
+				message: "ok"
 			});
 		});
 		// ENDPOINT GET ACCOUNT
