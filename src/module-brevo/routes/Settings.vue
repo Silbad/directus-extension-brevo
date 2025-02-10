@@ -34,7 +34,7 @@
 					<label class="type-label" for="api-key">
 						{{ t("api key") }}
 					</label>
-					<v-input id="api-key" v-model="settings.apiKey" autofocus :disabled :trim="true"
+					<v-input id="api-key" v-model="settings.api_key" autofocus :disabled :trim="true"
 						:autocomplete="false" placeholder="xkeysib-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx
 					"></v-input>
 					<a class="link-help"
@@ -145,34 +145,42 @@ export default defineComponent({
 			disabled.value = false;
 		};
 
+		// Get the user from the API
 		const getMe = async () => {
+			console.time('01 - getMe');
 			const response = await api.get('/users/me');
 			user.value = response.data.data;
 			locale.value = user.value.language.split('-')[0];
 		};
 
-		const getBrevoSettings = async () => {
-			// Fetch the settings from the API with error handling
+		// Init the settings from the API
+		const initBrevoSettings = async () => {
+			console.time('02 - initBrevoSettings');
 			try {
-				const response = await api.get('/brevo/settings');
-				console.log('response =>', response.data);
-				// settings.value = response.data.data;
-				// console.log('SETTINGS =>', settings.value);
-				// show.value = true;
+				await api.get('/brevo/settings');
 			} catch (error: any) {
 				messageError.value = error.response.data.errors[0].message;
 			}
 		};
 
-		// Fetch the user to get locale
-		getMe();
-		// Fetch the settings from the API with error handling
-		getBrevoSettings();
+		// Get the settings from the API
+		const getBrevoSettings = async () => {
+			console.time('03 - getBrevoSettings');
+			try {
+				const response = await api.get('/items/brevo_settings');
+				console.log('DATA =>', response.data);
+				settings.value = response.data.data;
+				if (settings.value.api_key) {
+					show.value = true;
+				}
+			} catch (error: any) {
+				messageError.value = error.response.data.errors[0].message;
+			}
+		};
 
-		// if (settings.value.apiKey) {
-		// 	show.value = true;
-		// }
-		// console.log(settings.value);
+		getMe();
+		initBrevoSettings();
+		getBrevoSettings();
 
 		return {
 			disabled,
